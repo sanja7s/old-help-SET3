@@ -11,7 +11,7 @@ from os.path import isfile, join
 import dateutil.parser
 
 
-def fq_places(by_night = False, save_to_file = False):
+def fq_places(by_night = False, save_to_file = False, file_name_input = 'ALL'):
 
     fq = np.zeros( (500001, 256) , dtype=int)
     D4DPath_SET3 = "/home/sscepano/DATA SET7S/D4D/SET3TSV"
@@ -20,7 +20,7 @@ def fq_places(by_night = False, save_to_file = False):
     
     for file_name in listdir(D4DPath_SET3):
         f_path = join(D4DPath_SET3,file_name)
-        if isfile(f_path) and file_name != '.DS_Store':
+        if isfile(f_path) and file_name != '.DS_Store' and file_name == file_name_input or file_name_input == 'ALL':
             file7s = open(f_path, 'r')
             for line in file7s:
                 i = i + 1
@@ -37,9 +37,9 @@ def fq_places(by_night = False, save_to_file = False):
                 
     if save_to_file == True:
         if by_night == True:
-            store_file_name = 'SET3_Fq_calls_user_subprefs_night.tsv'
+            store_file_name = 'SET3_Fq_calls_user_subprefs_night_' + file_name_input
         else:
-            store_file_name = 'SET3_Fq_calls_user_subprefs.tsv'
+            store_file_name = 'SET3_Fq_calls_user_subprefs_' + file_name_input
         file_store = open(store_file_name, "w")
         for usr in range (500001):
             for subpref in range (256):
@@ -52,5 +52,7 @@ def fq_places(by_night = False, save_to_file = False):
     print (i)        
     return fq
 
-def waiting():
-    print 'waiting'
+
+
+fq_places(save_to_file=True, file_name_input = 'SUBPREF_POS_SAMPLE_I.TSV')
+
