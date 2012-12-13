@@ -7,6 +7,8 @@ import shapefile
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
 import array
+import matplotlib as mpl
+mpl.rcParams['font.size'] = 7.
 
 m = Basemap(llcrnrlon=-9, \
                 llcrnrlat=3.8, \
@@ -20,6 +22,9 @@ m = Basemap(llcrnrlon=-9, \
 
 # read the shapefile archive
 s = m.readshapefile('/home/sscepano/DATA SET7S/D4D/SubPrefecture/GEOM_SOUS_PREFECTURE', 'subpref')
+
+# read the shapefile archive which IS NOT given by D4D
+#s = m.readshapefile('/home/sscepano/DATA SET7S/D4D/Regions/CIV_adm3', 'region')
 
 # prepare map coordinate lists for copper smelters locations
 #x, y = zip(*m.subpref)
@@ -57,19 +62,26 @@ lons = []
 lats = []
 num = []
 
-for subpref in no_users.iterkeys():
-    print(subpref)
-    lons.append(subpref_coord[subpref][0])
-    lats.append(subpref_coord[subpref][1])
-    #num.append(no_users[subpref])
-    num.append(subpref)
+# if wanna plot number of users whose this is home subpref
+#for subpref in no_users.iterkeys():
+#    print(subpref)
+#    lons.append(subpref_coord[subpref][0])
+#    lats.append(subpref_coord[subpref][1])
+#    num.append(no_users[subpref])
+
+# if wanna plot subpref ids only
+for subpref in range(1,256):
+    if subpref in [22, 32, 38, 49, 51, 72, 81, 83, 87, 88, 98, 105, 111, 112, 135, 136, 221, 239, 245, 255]:
+        lons.append(subpref_coord[subpref][0])
+        lats.append(subpref_coord[subpref][1])
+        num.append(subpref)    
     
 x, y = m(lons, lats)
 m.scatter(x, y, color='green')
 
 for name, xc, yc in zip(num, x, y):
     # draw the pref name in a yellow (shaded) box
-        plt.text(xc-1, yc-1, name)
+        plt.text(xc, yc, name)
 
 # draw coast lines and fill the continents
 m.drawcoastlines()
