@@ -4,15 +4,16 @@ Created on Dec 8, 2012
 @author: sscepano
 '''
 import numpy as n
+import pop_density as pop
 
-# for gives group of user ids and for the input file it will find probability of number of visited places
+# for given group of user ids and for the input file it will find probability of number of visited places
 # the last argument enables to use this function cumulatively over the time period invoking it iteratively
-def plot_distributions(usr_group, c, subpref_grp):
+def plot_distributions(usr_group, c, grp_type, grp_id):
     
     import pyplot as plt
-    plt.figure(subpref_grp)
+    plt.figure(grp_id)
     
-    print subpref_grp 
+    print grp_id 
     
     # here for each user we store the number of visited places
     usr_places_cum = n.zeros((500001, 256), dtype=n.int)
@@ -78,7 +79,7 @@ def plot_distributions(usr_group, c, subpref_grp):
     plt.ylabel('P(N)')
     plt.legend()    
     #plt.show()
-    figure_name = "/home/sscepano/D4D res/distr of num of visited subprefs/SET3_num_visited_places_distribution_SUBPREF" + str(subpref_grp) + ".png"
+    figure_name = "/home/sscepano/D4D res/distr of num of visited subprefs/SET3_num_visited_places_distribution_" + grp_type + str(grp_id) + ".png"
     print(figure_name)
     plt.savefig(figure_name, format = "png")        
     #  avg =  avg / len(usr_group)    
@@ -87,23 +88,86 @@ def plot_distributions(usr_group, c, subpref_grp):
     return usr_places_cum, prob_place_usrs 
     
 
-def superimpose_plot(usr_grp, subpref):
+def superimpose_plot(usr_grp, grp_type, subpref):
         
     c = range(ord('A'), ord('J')+1)    
-    usr_places_cum, prob_place_usrs = plot_distributions(usr_grp, c, subpref)
+    usr_places_cum, prob_place_usrs = plot_distributions(usr_grp, c, grp_type, subpref)
 
-#usr_grp = range(1,500000)
-subprefs = range(1,255)
+def usr_grp_subprefs(subprefs):
+    #usr_grp = range(1,500000)
+    #subprefs = range(1,255)
+    total_usr_grp = []
+    
+    file_name = "Users_divided_by_home_subprefALL.tsv"
+    f = open(file_name, 'r')
+    for line in f:
+        usr_grp = []
+        line = line.rstrip().split('\t')
+        subpref = int(line[0][:-1])
+        if subpref in subprefs:
+            print 'found_' + str(subpref)
+            for i in range(1, len(line)):
+                usr_grp.append(int(line[i]))
+                total_usr_grp.append(int(line[i]))
+                #print(usr_grp)
+            #superimpose_plot(usr_grp, subpref) 
+    return total_usr_grp
 
-file_name = "Users_divided_by_home_subprefALL.tsv"
-f = open(file_name, 'r')
-for line in f:
-    usr_grp = []
-    line = line.rstrip().split('\t')
-    subpref = int(line[0][:-1])
-    if subpref in subprefs:
-        print 'found_' + str(subpref)
-        for i in range(1, len(line)):
-            usr_grp.append(int(line[i]))
-            #print(usr_grp)
-        superimpose_plot(usr_grp, subpref) 
+def usr_grp_regions(regions):
+
+    #regions = range(1,19)
+    usrs = []
+    region_subprefs = {}
+    
+    file_name = "/home/sscepano/DATA SET7S/D4D/SET3TSV/Region_subprefs_mapping.tsv"
+    f = open(file_name, 'r')
+    for line in f:
+        region, subpref = line.rstrip().split('\t')
+        region = int(region)
+        subpref = int(subpref)
+        if region in regions:
+            try:
+                region_subprefs[region].append(subpref)
+            except KeyError:
+                region_subprefs[region] = [subpref]
+                
+    for region in region_subprefs.iterkeys():
+        usr_grp = usr_grp_subprefs(region_subprefs[region]) 
+        usrs += usr_grp
+            
+    return usrs
+
+# single region test
+#region = 1
+#usr_grp = usr_grp_regions([region])
+#print(usr_grp)
+#superimpose_plot(usr_grp,'REGION_',region)
+
+# all regions create
+#regions = range(1,19)
+#for region in regions:
+#    usr_grp = usr_grp_regions([region])
+#    print(usr_grp)
+#    superimpose_plot(usr_grp,'REGION_',region)
+
+# regions grouped by pop density
+regions = pop.divide_regions_by_pop_density()
+print(regions['low'])
+print(regions['medium'])
+print(regions['high'])
+#low_regions = regions['low']
+#usr_grp = usr_grp_regions(low_regions)
+#print(usr_grp)
+#superimpose_plot(usr_grp,'REGIONS_LOW_DENSITY',len(low_regions))
+#
+#mid_regions = regions['medium']
+#usr_grp = usr_grp_regions(mid_regions)
+#print(usr_grp)
+#superimpose_plot(usr_grp,'REGIONS_MEDIUM_DENSITY',len(mid_regions))
+#
+#high_regions = regions['high']
+#usr_grp = usr_grp_regions(high_regions)
+#print(usr_grp)
+#superimpose_plot(usr_grp,'REGIONS_HIGH_DENSITY',len(high_regions))   
+
+         
