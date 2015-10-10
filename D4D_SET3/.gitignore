@@ -1,3 +1,72 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+<<<<<<< HEAD
+*$py.class
+=======
+>>>>>>> c188cfc0453447719f78b5c69fd20155440a410e
+
+# C extensions
+*.so
+
+<<<<<<< HEAD
+# data files
+*.dat
+*.json
+
+=======
+>>>>>>> c188cfc0453447719f78b5c69fd20155440a410e
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
 bin
 .metadata 
 
@@ -43,3 +112,5 @@ bin
 Icon?
 ehthumbs.db
 Thumbs.db
+
+
